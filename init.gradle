@@ -2,17 +2,18 @@ import java.util.concurrent.TimeUnit
 
 allprojects { Project project ->
     def repoArr = ["https://maven.aliyun.com/repository/public", "https://jitpack.io"] as String[]
-	def removeRepoArr =["https://jcenter.bintray.com/"] as String[]
+    def removeRepoArr = ["https://jcenter.bintray.com/"] as String[]
     buildscript {
         repositories {
             all { ArtifactRepository repo ->
-                def url = repo.url.toString()
-				for(removeRepo in removeRepoArr){
-					if (url.startsWith(removeRepo)) {
-						remove repo
-					}
-				}
-                
+                if (repo instanceof MavenArtifactRepository) {
+                    def url = repo.url.toString()
+                    for (removeRepo in removeRepoArr) {
+                        if (url.startsWith(removeRepo)) {
+                            remove repo
+                        }
+                    }
+                }
             }
             for (item in repoArr) {
                 maven { setUrl(item) }
@@ -22,14 +23,15 @@ allprojects { Project project ->
 
     allprojects {
         repositories {
-
             all { ArtifactRepository repo ->
-                def url = repo.url.toString()
-               for(removeRepo in removeRepoArr){
-					if (url.startsWith(removeRepo)) {
-						remove repo
-					}
-				}
+                if (repo instanceof MavenArtifactRepository) {
+                    def url = repo.url.toString()
+                    for (removeRepo in removeRepoArr) {
+                        if (url.startsWith(removeRepo)) {
+                            remove repo
+                        }
+                    }
+                }
             }
             for (item in repoArr) {
                 maven { setUrl(item) }
